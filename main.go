@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -36,18 +35,21 @@ func main() {
 	}
 	// non-blocking listen and serve
 	go func() {
+		fmt.Println("Starting server on port 3000")
+
 		err := s.ListenAndServe()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println("Error starting server: $s\n", err)
+			os.Exit(1)
 		}
 	}()
 
 	// graceful shutdown
-	sigChan := make(chan os.Signal)
+	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
 	sig := <-sigChan
 	fmt.Println("Received terminate, graceful shutdown", sig)
-
+	// define timeout context (cancel not used here, hence _ )
 	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	s.Shutdown(tc)
 
