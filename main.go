@@ -17,7 +17,7 @@ func main() {
 	// handlers
 	sm := http.NewServeMux()
 	// 	Records in memory handler
-	inmemHandler := handlers.NewRecsInMem()
+	inmemHandler := handlers.NewInMemRecords()
 
 	// register routes
 	// /GET records from Mongo
