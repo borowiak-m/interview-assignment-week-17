@@ -8,22 +8,27 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/borowiak-m/interview-assignment-week-17/database"
 	"github.com/borowiak-m/interview-assignment-week-17/handlers"
 )
 
 func main() {
+	//database
+	database.InitDatabaseConn(
+		os.Getenv("MONGO_URI"),
+		os.Getenv("DATABASE"),
+		os.Getenv("COLLECTION"))
 
 	// handlers
 	sm := http.NewServeMux()
-	// 	Records in memory handler
-	inmemHandler := handlers.NewInMemRecords()
+	inmemHandler := handlers.NewInMemRecords()     // 	in memory records handler
+	mongoRecsHandler := handlers.NewMongoRecords() // mongo records handler
 
 	// register routes
-	// /GET records from Mongo
-	// /GET from map / records in memory
+	sm.Handle("/fetchMongoRecords", mongoRecsHandler)
 	sm.Handle("/inmemory", inmemHandler)
-	// /POST to map / records in memory
 
+	// server
 	// define server
 	s := &http.Server{
 		Addr:         ":3000",
@@ -32,6 +37,7 @@ func main() {
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,
 	}
+
 	// non-blocking listen and serve
 	go func() {
 		fmt.Println("Starting server on port 3000")
@@ -43,12 +49,6 @@ func main() {
 		}
 	}()
 
-	// mongodb
-	// var mongodbURI = "mongodb+srv://challengeUser:WUMgIwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getir-case-study?retryWrites=true"
-	// fmt.Println(mongodbURI)
-	// database.Connect(mongodbURI)
-	// fmt.Println("after connecting to mongo...")
-
 	// graceful shutdown
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
@@ -57,5 +57,4 @@ func main() {
 	// define timeout context (cancel not used here, hence _ )
 	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	s.Shutdown(tc)
-
 }
