@@ -8,11 +8,11 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/borowiak-m/interview-assignment-week-17/database"
 	"github.com/borowiak-m/interview-assignment-week-17/handlers"
 )
 
 func main() {
-	// mongodb+srv://challengeUser:WUMgIwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getir-case-study?retryWrites=true
 
 	// handlers
 	sm := http.NewServeMux()
@@ -44,6 +44,11 @@ func main() {
 		}
 	}()
 
+	// mongodb
+	var mongodbURI = "mongodb+srv://challengeUser:WUMgIwNBaydH8Yvu@challenge-xzwqd.mongodb.net/getir-case-study?retryWrites=true"
+	fmt.Println(mongodbURI)
+	database.Connect(mongodbURI)
+	fmt.Println("after connecting to mongo...")
 	// graceful shutdown
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
