@@ -28,8 +28,7 @@ func main() {
 	sm.Handle("/fetchMongoRecords", mongoRecsHandler)
 	sm.Handle("/inmemory", inmemHandler)
 
-	// server
-	// define server
+	// configure server
 	s := &http.Server{
 		Addr:         ":3000",
 		Handler:      sm,
@@ -38,7 +37,7 @@ func main() {
 		WriteTimeout: 1 * time.Second,
 	}
 
-	// non-blocking listen and serve
+	// start server in paralell to allow graceful shutdown
 	go func() {
 		fmt.Println("Starting server on port 3000")
 
@@ -49,12 +48,20 @@ func main() {
 		}
 	}()
 
-	// graceful shutdown
+	// setup graceful shutdown
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
-	sig := <-sigChan
+	sig := <-sigChan // will block here until termination signal is received
 	fmt.Println("Received terminate, graceful shutdown", sig)
 	// define timeout context (cancel not used here, hence _ )
 	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	s.Shutdown(tc)
+
+	// shutdown server
+	if err := s.Shutdown(tc); err != nil {
+		fmt.Printf("Error during server shutdown: %s\n", err)
+	}
+
+	// disconnect the db client
+	database.DisconnectClient()
+	fmt.Println("MongoDB client successfully disconncted")
 }
