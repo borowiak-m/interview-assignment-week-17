@@ -3,6 +3,9 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/borowiak-m/interview-assignment-week-17/data"
+	"github.com/borowiak-m/interview-assignment-week-17/database"
 )
 
 // /GET records from Mongo
@@ -41,4 +44,13 @@ func (mrecs *MongoRecords) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (mrecs *MongoRecords) getMongoRecords(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Handle /POST request", r.URL)
+	// get list of all mongo records
+	mr, err := data.GetMongoRecords(database.DBconfig.ClientInstance)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Unable to fetch records from Mongodb, err: %s", err), http.StatusInternalServerError)
+		return
+	}
+	if err = mr.ToJSON(w); err != nil {
+		http.Error(w, "Unable to marshall json", http.StatusInternalServerError)
+	}
 }

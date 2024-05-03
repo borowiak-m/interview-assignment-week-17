@@ -19,4 +19,5 @@ db.records.insertMany([
     "createdAt": ISODate("2017-01-27T13:22:10.421Z"),
     "count": [120, 400, 450, 660, 500, 770, 250]
     }
-    ])
+    ]);
+    print('Database and collection created.');
