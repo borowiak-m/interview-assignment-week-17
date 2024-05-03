@@ -43,12 +43,6 @@ func connect(uri string) {
 	if err != nil {
 		log.Fatal("Cannot connect to db", err)
 	}
-	// defer disconnecting client after instantiating
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -58,4 +52,14 @@ func connect(uri string) {
 
 	fmt.Println("Successfully connected to MongoDB!")
 	DBconfig.ClientInstance = client
+}
+
+func DisconnectClient() {
+	if DBconfig.ClientInstance != nil {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := DBconfig.ClientInstance.Disconnect(ctx); err != nil {
+			log.Fatal("Failed to disconnect from MongoDB:", err)
+		}
+	}
 }
