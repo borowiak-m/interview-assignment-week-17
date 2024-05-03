@@ -14,7 +14,6 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
-    command: ["mongod", "--bind_ip_all"]
     volumes:
       - mongo_data:/data/db
       - ./mongo-init:/docker-entrypoint-initdb.d
