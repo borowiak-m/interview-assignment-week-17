@@ -50,6 +50,7 @@ func (mrecs *MongoRecords) getMongoRecords(w http.ResponseWriter, r *http.Reques
 		http.Error(w, fmt.Sprintf("Unable to fetch records from Mongodb, err: %s", err), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	if err = mr.ToJSON(w); err != nil {
 		http.Error(w, "Unable to marshall json", http.StatusInternalServerError)
 	}

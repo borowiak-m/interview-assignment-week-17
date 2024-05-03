@@ -35,6 +35,7 @@ func (inmemrecs *InMemRecords) getInMemRecords(w http.ResponseWriter, r *http.Re
 	fmt.Println("Handle /GET request", r.URL)
 	// get list of all records in memory
 	lr := data.GetInMemRecords()
+	w.Header().Set("Content-Type", "application/json")
 	if err := lr.ToJSON(w); err != nil {
 		http.Error(w, "Unable to marshall json", http.StatusInternalServerError)
 	}
@@ -55,6 +56,7 @@ func (inmemrecs *InMemRecords) addInMemRecord(w http.ResponseWriter, r *http.Req
 	// add new item to list
 	data.AddRecordToMemory(newRec)
 	// echo new object
+	w.Header().Set("Content-Type", "application/json")
 	if err = newRec.ToJSON(w); err != nil {
 		http.Error(w, "Unable to marshall json", http.StatusInternalServerError)
 	}
