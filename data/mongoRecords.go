@@ -128,5 +128,4 @@ func GetFilteredMongoRecords(client *mongo.Client, filters *FilterRequest) (Reco
 	}
 
 	return records, nil
-
 }
