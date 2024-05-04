@@ -25,22 +25,35 @@ Docker Compose: Navigate to the project directory and use docker-compose up to s
 #### POST /fetchMongoRecords
 Request payload: JSON with startDate, endDate, minCount, and maxCount.
 Response: JSON with code, msg, and an array of records each containing key, createdAt, and totalCount.
-Example request payload: ``` {
+
+Example request payload: 
+
+```
+{
     "startDate": "2024-01-01",
     "endDate": "2024-12-31",
     "minCount": 100,
     "maxCount": 800
-} ```
-Example request: ```curl -X POST http://localhost:3000/fetchMongoRecords \
+}
+```
+
+Example request:
+
+```
+curl -X POST http://localhost:3000/fetchMongoRecords \
 -H "Content-Type: application/json" \
 -d '{
     "startDate": "2024-01-01",
     "endDate": "2024-12-31",
     "minCount": 100,
     "maxCount": 800
-}'```
+}'
+```
+
 Example response:
-```{
+
+```
+{
   "code": 0,
   "msg": "Success",
   "records": [
@@ -55,12 +68,19 @@ Example response:
       "totalCount": 1850
     }
   ]
-}```
+}
+```
 
 #### GET /inmemory
 Response: JSON array of all in-memory records with key and value.
-Example request: ```curl http://localhost:3000/inmemory```
+Example request: 
+
+```
+curl http://localhost:3000/inmemory
+```
+
 Example response:
+
 ```
 [
   {
@@ -71,19 +91,27 @@ Example response:
     "key": "inactive-tabs",
     "value": "getout!"
   }
-]```
+]
+```
 
 #### POST /inmemory
 Request payload: JSON with key and value
 Response: JSON with key and value from request
+
 Example request payload:
-```{
+
+```
+{
   "key": "session-data",
   "value": "user123"
 }
 ```
 
-Example request: ```curl -X POST http://localhost:3000/fetchMongoRecords -d '{"startDate":"2024-01-01", "endDate":"2024-12-31", "minCount":100, "maxCount":800}'```
+Example request: 
+
+```
+curl -X POST http://localhost:3000/fetchMongoRecords -d '{"startDate":"2024-01-01", "endDate":"2024-12-31", "minCount":100, "maxCount":800}'
+```
 
 ### Running the project 
 Start the Server: After setting up Docker, run the Docker Compose command which builds the Go application and starts the MongoDB service.
