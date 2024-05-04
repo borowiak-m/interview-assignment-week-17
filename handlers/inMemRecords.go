@@ -52,7 +52,7 @@ func (inmemrecs *InMemRecords) addInMemRecord(w http.ResponseWriter, r *http.Req
 		http.Error(w, "unable to decode new record from request body", http.StatusBadRequest)
 	}
 	// log new record
-	fmt.Printf("New record: %#v", newRec)
+	fmt.Printf("New record: %#v\n", newRec)
 	// add new item to list
 	data.AddRecordToMemory(newRec)
 	// echo new object
